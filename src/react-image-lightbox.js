@@ -280,6 +280,10 @@ class ReactImageLightbox extends Component {
     let imageSrc = this.props[srcType];
     let fitSizes = {};
 
+    if(imageSrc === '') {
+      return null;
+    }
+
     if (this.isImageLoaded(imageSrc)) {
       // Use full-size image if available
       fitSizes = this.getFitSizes(
@@ -1693,7 +1697,7 @@ ReactImageLightbox.defaultProps = {
   nextLabel: 'Next image',
   nextSrc: null,
   currentIndex: 0,
-  imagesLength: 0,
+  imagesLength: 1,
   nextSrcThumbnail: null,
   onAfterOpen: () => {},
   onImageLoadError: () => {},

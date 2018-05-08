@@ -397,6 +397,7 @@
                     key: "getBestImageForType",
                     value: function(srcType) {
                         var imageSrc = this.props[srcType], fitSizes = {};
+                        if ("" === imageSrc) return null;
                         if (this.isImageLoaded(imageSrc)) 
                         // Use full-size image if available
                         fitSizes = this.getFitSizes(this.imageCache[imageSrc].width, this.imageCache[imageSrc].height); else {
@@ -1367,7 +1368,7 @@
                 nextLabel: "Next image",
                 nextSrc: null,
                 currentIndex: 0,
-                imagesLength: 0,
+                imagesLength: 1,
                 nextSrcThumbnail: null,
                 onAfterOpen: function() {},
                 onImageLoadError: function() {},
