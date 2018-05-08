@@ -1333,7 +1333,7 @@ class ReactImageLightbox extends Component {
         );
 
         return;
-      } else if (bestImageInfo === null || bestImageInfo instanceof Object) {
+      } else if (bestImageInfo === null || !bestImageInfo.width) {
         const loadingIcon = (
           <div className="ril-loading-circle ril__loadingCircle ril__loadingContainer__icon">
             {[...new Array(12)].map((_, index) => (

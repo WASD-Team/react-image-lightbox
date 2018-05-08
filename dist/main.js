@@ -1077,31 +1077,7 @@
                                     key: _this16.props[srcType] + keyEndings[srcType]
                                 }, _react2.default.createElement("div", {
                                     className: "ril__errorContainer"
-                                }, _this16.props.imageLoadErrorMessage))); else if (null === bestImageInfo || bestImageInfo instanceof Object) {
-                                    var loadingIcon = _react2.default.createElement("div", {
-                                        className: "ril-loading-circle ril__loadingCircle ril__loadingContainer__icon"
-                                    }, [].concat(function(arr) {
-                                        if (Array.isArray(arr)) {
-                                            for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i];
-                                            return arr2;
-                                        }
-                                        return Array.from(arr);
-                                    }(new Array(12))).map(function(_, index) {
-                                        return _react2.default.createElement("div", {
-                                            // eslint-disable-next-line react/no-array-index-key
-                                            key: index,
-                                            className: "ril-loading-circle-point ril__loadingCirclePoint"
-                                        });
-                                    }));
-                                    // Fall back to loading icon if the thumbnail has not been loaded
-                                                                        images.push(_react2.default.createElement("div", {
-                                        className: imageClass + " ril__image ril-not-loaded",
-                                        style: imageStyle,
-                                        key: _this16.props[srcType] + keyEndings[srcType]
-                                    }, _react2.default.createElement("div", {
-                                        className: "ril__loadingContainer"
-                                    }, loadingIcon)));
-                                } else {
+                                }, _this16.props.imageLoadErrorMessage))); else if (null !== bestImageInfo && bestImageInfo.width) {
                                     var object, imageSrc = bestImageInfo.src;
                                     discourageDownloads ? (imageStyle.backgroundImage = "url('" + imageSrc + "')", images.push(_react2.default.createElement("div", {
                                         className: imageClass + " ril__image ril__imageDiscourager",
@@ -1126,6 +1102,30 @@
                                         alt: "string" == typeof imageTitle ? imageTitle : (0, _util.translate)("Image"),
                                         draggable: !1
                                     })));
+                                } else {
+                                    var loadingIcon = _react2.default.createElement("div", {
+                                        className: "ril-loading-circle ril__loadingCircle ril__loadingContainer__icon"
+                                    }, [].concat(function(arr) {
+                                        if (Array.isArray(arr)) {
+                                            for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i];
+                                            return arr2;
+                                        }
+                                        return Array.from(arr);
+                                    }(new Array(12))).map(function(_, index) {
+                                        return _react2.default.createElement("div", {
+                                            // eslint-disable-next-line react/no-array-index-key
+                                            key: index,
+                                            className: "ril-loading-circle-point ril__loadingCirclePoint"
+                                        });
+                                    }));
+                                    // Fall back to loading icon if the thumbnail has not been loaded
+                                                                        images.push(_react2.default.createElement("div", {
+                                        className: imageClass + " ril__image ril-not-loaded",
+                                        style: imageStyle,
+                                        key: _this16.props[srcType] + keyEndings[srcType]
+                                    }, _react2.default.createElement("div", {
+                                        className: "ril__loadingContainer"
+                                    }, loadingIcon)));
                                 }
                             }
                         }, zoomMultiplier = this.getZoomMultiplier();
