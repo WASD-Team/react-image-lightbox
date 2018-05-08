@@ -1257,7 +1257,6 @@ class ReactImageLightbox extends Component {
       animationDuration,
       clickOutsideToClose,
       discourageDownloads,
-      enableZoom,
       imageTitle,
       nextSrc,
       currentIndex,
@@ -1301,7 +1300,7 @@ class ReactImageLightbox extends Component {
       if (!this.props[srcType]) {
         return;
       }
-      const bestImageInfo = this.getBestImageForType(srcType);
+        const bestImageInfo = this.props[srcType] instanceof Object ? this.props[srcType] : this.getBestImageForType(srcType);
 
       const imageStyle = {
         ...transitionStyle,
@@ -1334,7 +1333,7 @@ class ReactImageLightbox extends Component {
         );
 
         return;
-      } else if (bestImageInfo === null) {
+      } else if (bestImageInfo === null || bestImageInfo instanceof Object) {
         const loadingIcon = (
           <div className="ril-loading-circle ril__loadingCircle ril__loadingContainer__icon">
             {[...new Array(12)].map((_, index) => (

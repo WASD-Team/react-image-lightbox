@@ -130,7 +130,7 @@ switch (target) {
     ];
     config.devServer = {
       contentBase: path.join(__dirname, 'build'),
-      port: process.env.PORT || 3001,
+      port: process.env.PORT || 3002,
       host: '0.0.0.0',
       disableHostCheck: true,
       stats: 'minimal',

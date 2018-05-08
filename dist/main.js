@@ -1050,8 +1050,7 @@
                 }, {
                     key: "render",
                     value: function() {
-                        var _this16 = this, _props = this.props, animationDisabled = _props.animationDisabled, animationDuration = _props.animationDuration, clickOutsideToClose = _props.clickOutsideToClose, discourageDownloads = _props.discourageDownloads, imageTitle = (_props.enableZoom, 
-                        _props.imageTitle), nextSrc = _props.nextSrc, currentIndex = _props.currentIndex, imagesLength = _props.imagesLength, prevSrc = _props.prevSrc, toolbarButtons = _props.toolbarButtons, reactModalStyle = _props.reactModalStyle, _onAfterOpen = _props.onAfterOpen, imageCrossOrigin = _props.imageCrossOrigin, reactModalProps = _props.reactModalProps, _state = this.state, zoomLevel = _state.zoomLevel, offsetX = _state.offsetX, offsetY = _state.offsetY, isClosing = _state.isClosing, loadErrorStatus = _state.loadErrorStatus, boxSize = this.getLightboxRect(), transitionStyle = {};
+                        var _this16 = this, _props = this.props, animationDisabled = _props.animationDisabled, animationDuration = _props.animationDuration, clickOutsideToClose = _props.clickOutsideToClose, discourageDownloads = _props.discourageDownloads, imageTitle = _props.imageTitle, nextSrc = _props.nextSrc, currentIndex = _props.currentIndex, imagesLength = _props.imagesLength, prevSrc = _props.prevSrc, toolbarButtons = _props.toolbarButtons, reactModalStyle = _props.reactModalStyle, _onAfterOpen = _props.onAfterOpen, imageCrossOrigin = _props.imageCrossOrigin, reactModalProps = _props.reactModalProps, _state = this.state, zoomLevel = _state.zoomLevel, offsetX = _state.offsetX, offsetY = _state.offsetY, isClosing = _state.isClosing, loadErrorStatus = _state.loadErrorStatus, boxSize = this.getLightboxRect(), transitionStyle = {};
                         // Transition settings for sliding animations
                         !animationDisabled && this.isAnimating() && (transitionStyle = _extends({}, transitionStyle, {
                             transition: "transform " + animationDuration + "ms"
@@ -1066,7 +1065,7 @@
                         var images = [], addImage = function(srcType, imageClass, transforms) {
                             // Ignore types that have no source defined for their full size image
                             if (_this16.props[srcType]) {
-                                var bestImageInfo = _this16.getBestImageForType(srcType), imageStyle = _extends({}, transitionStyle, ReactImageLightbox.getTransform(_extends({}, transforms, bestImageInfo)));
+                                var bestImageInfo = _this16.props[srcType] instanceof Object ? _this16.props[srcType] : _this16.getBestImageForType(srcType), imageStyle = _extends({}, transitionStyle, ReactImageLightbox.getTransform(_extends({}, transforms, bestImageInfo)));
                                 zoomLevel > _constant.MIN_ZOOM_LEVEL && (imageStyle.cursor = "move");
                                 // support IE 9 and 11
                                                                 // when error on one of the loads then push custom error stuff
@@ -1078,7 +1077,31 @@
                                     key: _this16.props[srcType] + keyEndings[srcType]
                                 }, _react2.default.createElement("div", {
                                     className: "ril__errorContainer"
-                                }, _this16.props.imageLoadErrorMessage))); else if (null !== bestImageInfo) {
+                                }, _this16.props.imageLoadErrorMessage))); else if (null === bestImageInfo || bestImageInfo instanceof Object) {
+                                    var loadingIcon = _react2.default.createElement("div", {
+                                        className: "ril-loading-circle ril__loadingCircle ril__loadingContainer__icon"
+                                    }, [].concat(function(arr) {
+                                        if (Array.isArray(arr)) {
+                                            for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i];
+                                            return arr2;
+                                        }
+                                        return Array.from(arr);
+                                    }(new Array(12))).map(function(_, index) {
+                                        return _react2.default.createElement("div", {
+                                            // eslint-disable-next-line react/no-array-index-key
+                                            key: index,
+                                            className: "ril-loading-circle-point ril__loadingCirclePoint"
+                                        });
+                                    }));
+                                    // Fall back to loading icon if the thumbnail has not been loaded
+                                                                        images.push(_react2.default.createElement("div", {
+                                        className: imageClass + " ril__image ril-not-loaded",
+                                        style: imageStyle,
+                                        key: _this16.props[srcType] + keyEndings[srcType]
+                                    }, _react2.default.createElement("div", {
+                                        className: "ril__loadingContainer"
+                                    }, loadingIcon)));
+                                } else {
                                     var object, imageSrc = bestImageInfo.src;
                                     discourageDownloads ? (imageStyle.backgroundImage = "url('" + imageSrc + "')", images.push(_react2.default.createElement("div", {
                                         className: imageClass + " ril__image ril__imageDiscourager",
@@ -1103,30 +1126,6 @@
                                         alt: "string" == typeof imageTitle ? imageTitle : (0, _util.translate)("Image"),
                                         draggable: !1
                                     })));
-                                } else {
-                                    var loadingIcon = _react2.default.createElement("div", {
-                                        className: "ril-loading-circle ril__loadingCircle ril__loadingContainer__icon"
-                                    }, [].concat(function(arr) {
-                                        if (Array.isArray(arr)) {
-                                            for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i];
-                                            return arr2;
-                                        }
-                                        return Array.from(arr);
-                                    }(new Array(12))).map(function(_, index) {
-                                        return _react2.default.createElement("div", {
-                                            // eslint-disable-next-line react/no-array-index-key
-                                            key: index,
-                                            className: "ril-loading-circle-point ril__loadingCirclePoint"
-                                        });
-                                    }));
-                                    // Fall back to loading icon if the thumbnail has not been loaded
-                                                                        images.push(_react2.default.createElement("div", {
-                                        className: imageClass + " ril__image ril-not-loaded",
-                                        style: imageStyle,
-                                        key: _this16.props[srcType] + keyEndings[srcType]
-                                    }, _react2.default.createElement("div", {
-                                        className: "ril__loadingContainer"
-                                    }, loadingIcon)));
                                 }
                             }
                         }, zoomMultiplier = this.getZoomMultiplier();

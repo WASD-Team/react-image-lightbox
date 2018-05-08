@@ -20,7 +20,7 @@ import '../shared/favicon/favicon-32x32.png';
 import '../shared/favicon/favicon.ico';
 import '../shared/favicon/safari-pinned-tab.svg';
 
-const images = [image1, image2, image3, image4];
+const images = [image1, image2, image3, image4, <span>Hello</span>];
 const thumbs = [image1Thumb, image2Thumb, image3Thumb, image4Thumb];
 
 const titles = [
