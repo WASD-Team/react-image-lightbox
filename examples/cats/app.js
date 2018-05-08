@@ -126,6 +126,8 @@ class App extends Component {
     if (this.state.isOpen) {
       lightbox = (
         <Lightbox
+          imagesLength={images.length}
+          currentIndex={this.state.index}
           mainSrc={images[this.state.index]}
           nextSrc={images[(this.state.index + 1) % images.length]}
           prevSrc={

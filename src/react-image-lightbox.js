@@ -66,7 +66,7 @@ class ReactImageLightbox extends Component {
     if (width > windowWidth) {
       nextX += (windowWidth - width) / 2;
     }
-    const scaleFactor = zoom * (targetWidth / width);
+    const scaleFactor = (zoom * (targetWidth / width))/1.5;
 
     return {
       transform: `translate3d(${nextX}px,${y}px,0) scale3d(${scaleFactor},${scaleFactor},1)`,
@@ -1256,6 +1256,8 @@ class ReactImageLightbox extends Component {
       enableZoom,
       imageTitle,
       nextSrc,
+      currentIndex,
+      imagesLength,
       prevSrc,
       toolbarButtons,
       reactModalStyle,
@@ -1424,7 +1426,6 @@ class ReactImageLightbox extends Component {
         ...reactModalStyle.content, // Allow style overrides via props
       },
     };
-
     return (
       <Modal
         isOpen
@@ -1476,37 +1477,33 @@ class ReactImageLightbox extends Component {
             {images}
           </div>
 
-          {prevSrc && (
-            <button // Move to previous image button
-              type="button"
-              className="ril-prev-button ril__navButtons ril__navButtonPrev"
-              key="prev"
-              aria-label={this.props.prevLabel}
-              onClick={!this.isAnimating() ? this.requestMovePrev : undefined} // Ignore clicks during animation
-            />
-          )}
-
-          {nextSrc && (
-            <button // Move to next image button
-              type="button"
-              className="ril-next-button ril__navButtons ril__navButtonNext"
-              key="next"
-              aria-label={this.props.nextLabel}
-              onClick={!this.isAnimating() ? this.requestMoveNext : undefined} // Ignore clicks during animation
-            />
-          )}
-
           <div // Lightbox toolbar
             className="ril-toolbar ril__toolbar"
           >
-            <ul className="ril-toolbar-left ril__toolbarSide ril__toolbarLeftSide">
-              <li className="ril-toolbar__item ril__toolbarItem">
-                <span className="ril-toolbar__item__child ril__toolbarItemChild">
-                  {imageTitle}
-                </span>
-              </li>
-            </ul>
+              {prevSrc && (
+                  <button // Move to previous image button
+                      type="button"
+                      className="ril-prev-button ril__navButtons ril__navButtonPrev"
+                      key="prev"
+                      aria-label={this.props.prevLabel}
+                      onClick={!this.isAnimating() ? this.requestMovePrev : undefined} // Ignore clicks during animation
+                  />
+              )}
 
+              {nextSrc && (
+                  <button // Move to next image button
+                      type="button"
+                      className="ril-next-button ril__navButtons ril__navButtonNext"
+                      key="next"
+                      aria-label={this.props.nextLabel}
+                      onClick={!this.isAnimating() ? this.requestMoveNext : undefined} // Ignore clicks during animation
+                  />
+              )}
+            <div className="ril-count-bar">
+              <span className="ril-count-current">{currentIndex+1}</span>
+              <span className="ril-count-text">of</span>
+              <span className="ril-count-length">{imagesLength}</span>
+            </div>
             <ul className="ril-toolbar-right ril__toolbarSide ril__toolbarRightSide">
               {toolbarButtons &&
                 toolbarButtons.map((button, i) => (
@@ -1517,61 +1514,6 @@ class ReactImageLightbox extends Component {
                     {button}
                   </li>
                 ))}
-
-              {enableZoom && (
-                <li className="ril-toolbar__item ril__toolbarItem">
-                  <button // Lightbox zoom in button
-                    type="button"
-                    key="zoom-in"
-                    aria-label={this.props.zoomInLabel}
-                    className={[
-                      'ril-zoom-in',
-                      'ril__toolbarItemChild',
-                      'ril__builtinButton',
-                      'ril__zoomInButton',
-                      ...(zoomLevel === MAX_ZOOM_LEVEL
-                        ? ['ril__builtinButtonDisabled']
-                        : []),
-                    ].join(' ')}
-                    disabled={
-                      this.isAnimating() || zoomLevel === MAX_ZOOM_LEVEL
-                    }
-                    onClick={
-                      !this.isAnimating() && zoomLevel !== MAX_ZOOM_LEVEL
-                        ? this.handleZoomInButtonClick
-                        : undefined
-                    }
-                  />
-                </li>
-              )}
-
-              {enableZoom && (
-                <li className="ril-toolbar__item ril__toolbarItem">
-                  <button // Lightbox zoom out button
-                    type="button"
-                    key="zoom-out"
-                    aria-label={this.props.zoomOutLabel}
-                    className={[
-                      'ril-zoom-out',
-                      'ril__toolbarItemChild',
-                      'ril__builtinButton',
-                      'ril__zoomOutButton',
-                      ...(zoomLevel === MIN_ZOOM_LEVEL
-                        ? ['ril__builtinButtonDisabled']
-                        : []),
-                    ].join(' ')}
-                    disabled={
-                      this.isAnimating() || zoomLevel === MIN_ZOOM_LEVEL
-                    }
-                    onClick={
-                      !this.isAnimating() && zoomLevel !== MIN_ZOOM_LEVEL
-                        ? this.handleZoomOutButtonClick
-                        : undefined
-                    }
-                  />
-                </li>
-              )}
-
               <li className="ril-toolbar__item ril__toolbarItem">
                 <button // Lightbox close button
                   type="button"
@@ -1583,22 +1525,6 @@ class ReactImageLightbox extends Component {
               </li>
             </ul>
           </div>
-
-          {this.props.imageCaption && (
-            // eslint-disable-next-line jsx-a11y/no-static-element-interactions
-            <div // Image caption
-              onWheel={this.handleCaptionMousewheel}
-              onMouseDown={event => event.stopPropagation()}
-              className="ril-caption ril__caption"
-              ref={el => {
-                this.caption = el;
-              }}
-            >
-              <div className="ril-caption-content ril__captionContent">
-                {this.props.imageCaption}
-              </div>
-            </div>
-          )}
         </div>
       </Modal>
     );
@@ -1609,6 +1535,8 @@ ReactImageLightbox.propTypes = {
   //-----------------------------
   // Image sources
   //-----------------------------
+  currentIndex: PropTypes.number,
+  imagesLength: PropTypes.number,
 
   // Main display image url
   mainSrc: PropTypes.string.isRequired, // eslint-disable-line react/no-unused-prop-types
@@ -1764,6 +1692,8 @@ ReactImageLightbox.defaultProps = {
   mainSrcThumbnail: null,
   nextLabel: 'Next image',
   nextSrc: null,
+  currentIndex: 0,
+  imagesLength: 0,
   nextSrcThumbnail: null,
   onAfterOpen: () => {},
   onImageLoadError: () => {},
